@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <LangVersion>8</LangVersion>
+        <PlatformTarget>any</PlatformTarget>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Authors>Jan Baarssen, Jan Kokenberg, John Campion</Authors>
+        <Product>jcamp.PdfLib.Core</Product>
+        <Description>PdfLib CORE is a fast PDF editing and reading library for modern .NET core applications.</Description>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1701;1702;1591;0649</NoWarn>
+        <Copyright>MIT</Copyright>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageProjectUrl>https://github.com/jcamp-code/PdfLibCore</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/jcamp-code/PdfLibCore</RepositoryUrl>
+        <PackageTags>PDF; Reader; netstandard; PDFium; JPEG; JPG</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <ClientVersion Condition=" '$(IsPreview)' != 'true' ">$(ClientOfficialVersion)</ClientVersion>
+        <ClientVersion Condition=" '$(IsPreview)' == 'true' ">$(ClientPreviewVersion)</ClientVersion>
+        <VersionSuffix Condition=" '$(IsNightly)' == 'true' ">nightly-$(CurrentDate)</VersionSuffix>
+        <VersionSuffix Condition=" '$(IsPreview)' == 'true' ">preview</VersionSuffix>
+        <Version Condition=" '$(VersionSuffix)' == '' ">$(ClientVersion)</Version>
+        <Version Condition=" '$(VersionSuffix)' != '' ">$(ClientVersion)-$(VersionSuffix)</Version>
+        <FileVersion>$(ClientVersion)</FileVersion>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="Types\FPDF_TypeDef.tt">
+          <Generator>TextTemplatingFileGenerator</Generator>
+          <LastGenOutput>FPDF_TypeDef.cs</LastGenOutput>
+        </None>
+        <None Update="Pdfium.tt">
+          <Generator>TextTemplatingFileGenerator</Generator>
+          <LastGenOutput>Pdfium.g.cs</LastGenOutput>
+        </None>
+        <Content Include="..\..\LICENSE.txt">
+            <PackagePath>LICENSE.txt</PackagePath>
+          <Link>LICENSE.txt</Link>
+        </Content>
+        <Content Include="..\..\assets\icon.png">
+            <PackagePath>icon.png</PackagePath>
+            <Link>icon.png</Link>
+        </Content>
+        <None Update="common.ttinclude">
+          <DependentUpon>Pdfium.tt</DependentUpon>
+        </None>
+        <None Update="Pdfium.xml">
+          <DependentUpon>Pdfium.tt</DependentUpon>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Pdfium.g.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>Pdfium.tt</DependentUpon>
+      </Compile>
+      <Compile Update="Types\FPDF_TypeDef.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>FPDF_TypeDef.tt</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="bblanchon.PDFium.Linux" Version="107.0.5268" />
+      <PackageReference Include="bblanchon.PDFium.macOS" Version="107.0.5268" />
+      <PackageReference Include="bblanchon.PDFium.Win32" Version="107.0.5268" />
+      <PackageReference Include="MinVer" Version="4.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    </ItemGroup>
+
+</Project>

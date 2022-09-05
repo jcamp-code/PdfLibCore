@@ -1,0 +1,80 @@
+name: Pre Release Package Version
+on:
+  push:
+    tags:
+     - 2.*     
+jobs: 
+  build:
+    if: github.event.base_ref == 'refs/heads/dev/v3'
+    runs-on: ubuntu-latest
+    steps:    
+    
+    - name: Print Tag Ref
+      run: echo $GITHUB_REF
+      
+    - name: Extract Version Number
+      uses: actions-ecosystem/action-regex-match@v2
+      id: regex-match
+      with:
+        text: ${{ github.ref }}
+        regex: '[0-9.]+-pre[0-9]+'
+       
+    - name: Print Version Number
+      run: echo '${{ steps.regex-match.outputs.match }}'
+      
+    - uses: actions/checkout@v2
+    - name: Setup .NET  
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: |
+        dotnet build --configuration Release --no-restore
+    
+    - name: Test
+      run: |
+        dotnet test --no-restore --verbosity normal
+    
+    - name: Publish PdfLibCore
+      uses: drusellers/publish-nuget@master
+      with:
+        project-file-path: src/PdfLibCore/PdfLibCore.csproj
+        version: ${{ steps.regex-match.outputs.match }}
+        tag-commit: false
+        nuget-key: ${{secrets.NUGET_API_KEY}}
+    
+    - name: Publish PdfLibCore.FreeImage
+      uses: drusellers/publish-nuget@master
+      with:
+        project-file-path: src/PdfLibCore.FreeImage/PdfLibCore.FreeImage.csproj
+        version: ${{ steps.regex-match.outputs.match }}
+        tag-commit: false
+        nuget-key: ${{secrets.NUGET_API_KEY}}
+    
+    - name: Publish PdfLibCore.ImageSharp
+      uses: drusellers/publish-nuget@master
+      with:
+        project-file-path: src/PdfLibCore.ImageSharp/PdfLibCore.ImageSharp.csproj
+        version: ${{ steps.regex-match.outputs.match }}
+        tag-commit: false
+        nuget-key: ${{secrets.NUGET_API_KEY}}
+        
+    - name: Publish PdfLibCore.MagickNet
+      uses: drusellers/publish-nuget@master
+      with:
+        project-file-path: src/PdfLibCore.MagickNet/PdfLibCore.MagickNet.csproj
+        version: ${{ steps.regex-match.outputs.match }}
+        tag-commit: false
+        nuget-key: ${{secrets.NUGET_API_KEY}}
+    
+    - name: Publish PdfLibCore.SkiaSharp
+      uses: drusellers/publish-nuget@master
+      with:
+        project-file-path: src/PdfLibCore.SkiaSharp/PdfLibCore.SkiaSharp.csproj
+        version: ${{ steps.regex-match.outputs.match }}
+        tag-commit: false
+        nuget-key: ${{secrets.NUGET_API_KEY}}

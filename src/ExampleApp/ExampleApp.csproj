@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>9</LangVersion>
+		<IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PdfLibCore.FreeImage\jcamp.PdfLibCore.FreeImage.csproj" />
+      <ProjectReference Include="..\PdfLibCore.ImageSharp\jcamp.PdfLibCore.ImageSharp.csproj" />
+      <ProjectReference Include="..\PdfLibCore.MagickNet\jcamp.PdfLibCore.MagickNet.csproj" />
+      <ProjectReference Include="..\PdfLibCore.SkiaSharp\jcamp.PdfLibCore.SkiaSharp.csproj" />
+      <ProjectReference Include="..\PdfLibCore\jcamp.PdfLibCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SixLabors.ImageSharp" Version="2.1.2" />
+    </ItemGroup>
+
+</Project>
